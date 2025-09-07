@@ -92,3 +92,16 @@ export const changePassword = async (userData: { password_hash: string }, token:
       return { message: null, suggestions, warning, token: null, error: errorMsg };
   }
 };
+
+export const productListing = async ( page: number, limit: number ) => {
+  try {
+    const response = await api.get(`/products/list-products?page=${page}&limit=${limit}`);
+    return { products: response.data.data, total:response.data.total , error: null };
+  } catch (error: any) {
+    let errorMsg = "Something went wrong!";
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMsg = error.response.data.message;
+    }
+    return { products: null, total: null, error: errorMsg };
+  }
+};
