@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Card, CardContent, Button } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Button, Autocomplete, TextField } from '@mui/material';
 import { productListing } from '../api/authApi';
 interface Product {
   id: string,
@@ -14,27 +14,77 @@ interface Product {
 
 const Products: React.FC = () => {
 
+  const [selectedRisk, setSelectedRisk] = useState<{ label: string; value: string } | null>(null);
+  const [selectedInvestType, setSelectedInvestType] = useState<{ label: string; value: string } | null>(null);
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<{ risk_level: string | null; investment_type: string | null }>({ risk_level: null, investment_type: null });
   const [productList, setProductList] = useState<Product[] | any>([]);
   const [totalProducts, setTotalProducts] = useState(0);
   const limit = 6
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const {products, total} = await productListing(page, limit);
+      const {products, total} = await productListing(page, limit, filters);
       setTotalProducts(total);
       setProductList(products);
     }
     fetchProduct();
-  }, [])
+  }, [page, filters])
+
+  const handleFilter = () => {
+    let filter : {risk_level: string | null, investment_type: string | null} = {
+      risk_level: null,
+      investment_type: null
+    };
+    if(selectedRisk){
+      filter.risk_level = selectedRisk.value || selectedRisk.label;
+    }
+    if(selectedInvestType){
+      filter.investment_type = selectedInvestType.value || selectedInvestType.label;
+    }
+    setFilters(filter);
+    setPage(1);
+  }
+
+  const removeFilter = () => {
+    let filter : {risk_level: string | null, investment_type: string | null} = {
+      risk_level: null,
+      investment_type: null
+    };
+    setSelectedInvestType(null);
+    setSelectedRisk(null);
+    setFilters(filter);
+    setPage(1);
+  }
 
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Explore all {totalProducts} Products
+          {totalProducts ? `Explore all ${totalProducts} Products` : 'No matching Products found'}
         </Typography>
-        
+        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <Autocomplete
+          value={selectedRisk}
+          onChange={(event, newValue) => setSelectedRisk(newValue)}
+          options={riskLevelOptions}
+          getOptionLabel={(option) => option.label}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Risk Level" />}
+          clearOnEscape
+        />
+        <Autocomplete
+          value={selectedInvestType}
+          onChange={(event, newValue) => setSelectedInvestType(newValue)}
+          options={investmentTypeOptions}
+          getOptionLabel={(option) => option.label}
+          sx={{ width: 200 }}
+          renderInput={(params) => <TextField {...params} label="Investment Type" />}
+          clearOnEscape
+        />
+        <Button variant="contained" onClick={handleFilter} > Apply Filter </Button>
+        <Button variant="contained" onClick={removeFilter} > Remove Filter </Button>
+      </Box>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
           {productList.map((product: Product) => (
             <Card key={product.id} sx={{ flex: '1 1 350px', minWidth: '350px', display: 'flex', flexDirection: 'column' }}>
@@ -73,5 +123,19 @@ const Products: React.FC = () => {
     </Container>
   );
 };
+
+const riskLevelOptions = [
+  {label: 'low'}, 
+  {label: 'medium'}, 
+  {label: 'high'}
+];
+
+const investmentTypeOptions = [
+  {label: 'bond'}, 
+  {label: 'fd'}, 
+  {label: 'mf'},
+  {label: 'etf'},
+  {label: 'other'}
+]
 
 export default Products;

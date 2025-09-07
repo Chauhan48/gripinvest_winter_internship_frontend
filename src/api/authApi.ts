@@ -93,12 +93,22 @@ export const changePassword = async (userData: { password_hash: string }, token:
   }
 };
 
-export const productListing = async ( page: number, limit: number ) => {
+export const productListing = async (
+  page: number,
+  limit: number,
+  filters: { risk_level: string | null; investment_type: string | null }
+) => {
   try {
-    const response = await api.get(`/products/list-products?page=${page}&limit=${limit}`);
-    return { products: response.data.data, total:response.data.total , error: null };
+    const response = await api.get('/products/list-products', {
+      params: {
+        page,
+        limit,
+        ...filters,
+      },
+    });
+    return { products: response.data.data, total: response.data.total, error: null };
   } catch (error: any) {
-    let errorMsg = "Something went wrong!";
+    let errorMsg = 'Something went wrong!';
     if (error.response && error.response.data && error.response.data.message) {
       errorMsg = error.response.data.message;
     }
