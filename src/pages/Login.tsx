@@ -13,19 +13,25 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [suggestion, setSuggestion] = useState<string[] | null>(null);
+  const [warning, setWarning] = useState<string | null>(null)
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSuggestion(null);
+    setWarning(null);
     setError(null);
     setSuccess(null);
     try {
       if (!signinToggle) {
         // Register
-        const { message, error } = await registerUser({ first_name, last_name, email, password_hash: password });
+        const { message, suggestions, warning, error } = await registerUser({ first_name, last_name, email, password_hash: password });
         if (error) {
           setError(error);
+          setSuggestion(suggestions);
+          setWarning(warning);
           setOpenSnackbar(true);
         } else {
           setSuccess(message || 'Registration successful!');
@@ -150,7 +156,9 @@ const Login: React.FC = () => {
       </Box>
       <Snackbar open={openSnackbar} autoHideDuration={4000} onClose={handleCloseSnackbar} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert onClose={handleCloseSnackbar} severity={error ? 'error' : 'success'} sx={{ width: '100%' }}>
-          {error ? error : success}
+          {error ? error : success} <br />
+          <span style={{color: '#0288d1'}}>Suggestion: {suggestion ? suggestion : ''} </span> <br />
+          <span style={{color: '#fa9304ff'}}>Warning: {warning ? warning : ''}</span>
         </Alert>
       </Snackbar>
     </Container>
