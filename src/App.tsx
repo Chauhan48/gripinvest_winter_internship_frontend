@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Investments from './pages/Investments';
 import Login from './pages/Login';
+import ForgotPassword from './components/ForgotPassword';
 
 const theme = createTheme();
 
@@ -44,6 +45,12 @@ function App() {
                   <Investments />
                 </Layout>
               </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <ForgotPassword />
             }
           />
         </Routes>

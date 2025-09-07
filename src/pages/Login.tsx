@@ -64,6 +64,10 @@ const Login: React.FC = () => {
     setOpenSnackbar(false);
   };
 
+  const handleForgotPassword = async () => {
+    navigate('/forgot-password');
+  }
+
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -137,6 +141,9 @@ const Login: React.FC = () => {
               <p onClick={handleSigninToglle} style={{ cursor: 'pointer', color: '#1976d2', textDecoration: 'underline' }}>
                 {signinToggle ? "New user? Register" : "Already have an account? Sign In"}
               </p>
+              {signinToggle && <p onClick={handleForgotPassword} style={{ cursor: 'pointer', color: '#1976d2', textDecoration: 'underline' }}>
+                Forgot Password
+              </p>}
             </Box>
           </CardContent>
         </Card>
