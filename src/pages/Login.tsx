@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box, TextField, Button, Card, CardContent, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
-
 import { registerUser, loginUser } from '../api/authApi';
 
 const Login: React.FC = () => {
