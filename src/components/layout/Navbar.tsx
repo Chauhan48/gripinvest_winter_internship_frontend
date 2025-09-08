@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Products', 'Investments'];
+const pages = ['Dashboard', 'Products', 'Investments'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
@@ -41,6 +41,9 @@ function Navbar() {
   const handleNavigation = (page: string) => {
     handleCloseNavMenu();
     switch (page) {
+      case 'Dashboard':
+        navigate('/dashboard');
+        break;
       case 'Products':
         navigate('/products');
         break;
