@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, Button, Autocomplete, TextField } from '@mui/material';
-import { productListing } from '../api/authApi';
+import { productListing, suggestProducts } from '../api/authApi';
 interface Product {
   id: string,
   name: string,
@@ -20,6 +20,7 @@ const Products: React.FC = () => {
   const [filters, setFilters] = useState<{ risk_level: string | null; investment_type: string | null }>({ risk_level: null, investment_type: null });
   const [productList, setProductList] = useState<Product[] | any>([]);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [suggestion, setSuggestion] = useState(false);
   const limit = 6
 
   useEffect(() => {
@@ -54,6 +55,21 @@ const Products: React.FC = () => {
     setSelectedInvestType(null);
     setSelectedRisk(null);
     setFilters(filter);
+    setSuggestion(!suggestion);
+    setPage(1);
+  }
+
+  const suggestFilter = async () => {
+    setSelectedInvestType(null);
+    setSelectedRisk(null);
+    const {products} = await suggestProducts();
+    // If products is not an array, wrap it in an array
+    if (products && !Array.isArray(products)) {
+      setProductList([products]);
+    } else {
+      setProductList(products || []);
+    }
+    console.log(products);
     setPage(1);
   }
 
@@ -84,6 +100,7 @@ const Products: React.FC = () => {
         />
         <Button variant="contained" onClick={handleFilter} > Apply Filter </Button>
         <Button variant="contained" onClick={removeFilter} > Remove Filter </Button>
+        <Button variant="contained" onClick={suggestFilter} > Suggest Products ✨ </Button>
       </Box>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
           {productList.map((product: Product) => (
@@ -125,17 +142,18 @@ const Products: React.FC = () => {
 };
 
 const riskLevelOptions = [
-  {label: 'low'}, 
-  {label: 'medium'}, 
-  {label: 'high'}
+  { label: 'low', value: 'low' },
+  { label: 'medium', value: 'medium' },
+  { label: 'high', value: 'high' },
 ];
 
 const investmentTypeOptions = [
-  {label: 'bond'}, 
-  {label: 'fd'}, 
-  {label: 'mf'},
-  {label: 'etf'},
-  {label: 'other'}
-]
+  { label: 'bond', value: 'bond' },
+  { label: 'fd', value: 'fd' },
+  { label: 'mf', value: 'mf' },
+  { label: 'etf', value: 'etf' },
+  { label: 'other', value: 'other' },
+];
+
 
 export default Products;

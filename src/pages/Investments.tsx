@@ -1,5 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, Chip } from '@mui/material';
+
+interface investments {
+  id: string,
+  user_id: string,
+  product_id: string,
+  amount: string,
+  invested_at: string,
+  status: string,
+  expected_return: number,
+  maturity_date: Date
+}
 
 const Investments: React.FC = () => {
   const sampleInvestments = [
@@ -20,6 +31,7 @@ const Investments: React.FC = () => {
       dateInvested: '2024-02-01'
     }
   ];
+  const [investments, setInvestments] = useState<investments | null>(null)
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -43,7 +55,7 @@ const Investments: React.FC = () => {
         <Typography variant="h6" color="text.secondary" paragraph>
           Track your investment portfolio performance
         </Typography>
-        
+
         {sampleInvestments.length === 0 ? (
           <Card>
             <CardContent>
@@ -64,8 +76,8 @@ const Investments: React.FC = () => {
                     <Typography variant="h6" component="h2">
                       {investment.productName}
                     </Typography>
-                    <Chip 
-                      label={investment.status} 
+                    <Chip
+                      label={investment.status}
                       color={getStatusColor(investment.status) as any}
                       size="small"
                     />
