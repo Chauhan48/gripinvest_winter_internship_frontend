@@ -119,8 +119,20 @@ export const productListing = async (
 export const suggestProducts = async () => {
   try {
     const response = await api.get("/products/suggestions");
-    console.log(response.data.products)
     return { products: response.data.products, error: null };
+  } catch (error: any) {
+    let errorMsg = "Something went wrong!";
+    if (error.response && error.response.data && error.response.data.message) {
+      errorMsg = error.response.data.message;
+    }
+    return { products: null, error: errorMsg };
+  }
+};
+
+export const investments = async () => {
+  try {
+    const response = await api.get("/user/list-investments");
+    return { data: response.data, error: null };
   } catch (error: any) {
     let errorMsg = "Something went wrong!";
     if (error.response && error.response.data && error.response.data.message) {

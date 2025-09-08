@@ -1,37 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, Chip } from '@mui/material';
+import InvestmentCharts from '../components/InvestmentCharts';
 
 interface investments {
   id: string,
+  product_name: string,
   user_id: string,
   product_id: string,
   amount: string,
   invested_at: string,
   status: string,
-  expected_return: number,
+  expected_return: string,
   maturity_date: Date
 }
 
 const Investments: React.FC = () => {
-  const sampleInvestments = [
-    {
-      id: 1,
-      productName: 'Growth Fund',
-      amount: 5000,
-      currentValue: 5250,
-      status: 'Active',
-      dateInvested: '2024-01-15'
-    },
-    {
-      id: 2,
-      productName: 'Conservative Fund',
-      amount: 2000,
-      currentValue: 2100,
-      status: 'Active',
-      dateInvested: '2024-02-01'
+
+    const [investments, setInvestments] = useState<investments[]>([]);
+  useEffect(() => {
+    if(investments){
+      console.log(investments);
     }
-  ];
-  const [investments, setInvestments] = useState<investments | null>(null)
+  }, [investments]);
+  const handleChildData = (data : investments[]) => {
+    setInvestments(data);
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -48,15 +41,13 @@ const Investments: React.FC = () => {
 
   return (
     <Container maxWidth="lg">
+      <InvestmentCharts response={handleChildData} />
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          My Investments
-        </Typography>
-        <Typography variant="h6" color="text.secondary" paragraph>
-          Track your investment portfolio performance
+          All Investments
         </Typography>
 
-        {sampleInvestments.length === 0 ? (
+        {investments.length === 0 ? (
           <Card>
             <CardContent>
               <Typography variant="h6" align="center" color="text.secondary">
@@ -69,12 +60,12 @@ const Investments: React.FC = () => {
           </Card>
         ) : (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-            {sampleInvestments.map((investment) => (
+            {investments.map((investment) => (
               <Card key={investment.id} sx={{ flex: '1 1 400px', minWidth: '400px' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                     <Typography variant="h6" component="h2">
-                      {investment.productName}
+                      {investment.product_name}
                     </Typography>
                     <Chip
                       label={investment.status}
@@ -83,16 +74,16 @@ const Investments: React.FC = () => {
                     />
                   </Box>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    Invested: ${investment.amount.toLocaleString()}
+                    Invested: ${parseFloat(investment.amount).toLocaleString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    Current Value: ${investment.currentValue.toLocaleString()}
+                    Invested At: {new Date(investment.invested_at).toLocaleDateString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
-                    Date Invested: {new Date(investment.dateInvested).toLocaleDateString()}
+                    Expected Return: {(parseFloat(investment.expected_return) * 100).toFixed(2)}%
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Return: {((investment.currentValue - investment.amount) / investment.amount * 100).toFixed(2)}%
+                  <Typography variant="body2" color="text.secondary" paragraph>
+                    Maturity Date: {new Date(investment.maturity_date).toLocaleDateString()}
                   </Typography>
                 </CardContent>
               </Card>
