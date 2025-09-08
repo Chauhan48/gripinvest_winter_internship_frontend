@@ -29,7 +29,7 @@ const Dashboard: React.FC = () => {
   const [summary, setSummary] = useState('');
   const [fetchAiResponse, setFetchAiResponse] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [status, setStatus] = useState<statusDistribution>({active: '', matured: '', cancelled: ''});
+  const [status, setStatus] = useState<statusDistribution>({ active: '', matured: '', cancelled: '' });
 
   const data = {
     labels: ['Active', 'Matured', 'Cancelled'],
@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
         data: [status.active, status.matured, status.cancelled],
         backgroundColor: [
           'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 206, 86, 0.6)', 
+          'rgba(255, 206, 86, 0.6)',
           'rgba(255, 99, 132, 0.6)',
         ],
         borderColor: [
@@ -155,55 +155,55 @@ const Dashboard: React.FC = () => {
       {fetchAiResponse ?
         (
           <>
-        <Card sx={{ flex: '1 1 300px', minWidth: '300px' }}>
-          <CardContent>
-          <Typography variant="h4" component="h2">
-            AI powered portfolio overview
-          </Typography>
-          <Typography variant="h6" component="h2">
-            {summary}
-          </Typography>
-          </CardContent>
-        </Card>
-        <Box sx={{ my: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-          Investment status
-        </Typography>
-        <Pie data={data} />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-          <Card sx={{ flex: '1 1 300px', minWidth: '300px' }}>
-            <CardContent>
-              <Typography variant="h6" component="h2">
-                Active
+            <Card sx={{ flex: '1 1 300px', minWidth: '300px' }}>
+              <CardContent>
+                <Typography variant="h4" component="h2">
+                  AI powered portfolio overview
+                </Typography>
+                <Typography variant="h6" component="h2">
+                  {summary}
+                </Typography>
+              </CardContent>
+            </Card>
+            <Box sx={{ my: 4 }}>
+              <Typography variant="h4" component="h1" gutterBottom>
+                Investment status
               </Typography>
-              <Typography variant="h4" color="primary">
-                {status.active}
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: '1 1 300px', minWidth: '300px' }}>
-            <CardContent>
-              <Typography variant="h6" component="h2">
-                Matured
-              </Typography>
-              <Typography variant="h4" color="primary">
-                {status.matured}
-              </Typography>
-            </CardContent>
-          </Card>
-          <Card sx={{ flex: '1 1 300px', minWidth: '300px' }}>
-            <CardContent>
-              <Typography variant="h6" component="h2">
-                Cancelled
-              </Typography>
-              <Typography variant="h4" color="primary">
-                {status.cancelled}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Box>
-        </Box>
-        </>
+
+              <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+                <Box sx={{ flex: '1 1 300px', minWidth: 300 }}>
+                  <Pie data={data} />
+                </Box>
+                <Card sx={{ flex: '1 1 300px', minWidth: 300 }}>
+                  <CardContent>
+                    <Typography variant="h6" component="h2">
+                      Active
+                    </Typography>
+                    <Typography variant="h4" color="primary">
+                      {status.active}
+                    </Typography>
+                  </CardContent>
+                  <CardContent>
+                    <Typography variant="h6" component="h2">
+                      Matured
+                    </Typography>
+                    <Typography variant="h4" color="yellow">
+                      {status.matured}
+                    </Typography>
+                  </CardContent>
+                  <CardContent>
+                    <Typography variant="h6" component="h2">
+                      Cancelled
+                    </Typography>
+                    <Typography variant="h4" color="pink">
+                      {status.cancelled}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Box>
+
+          </>
         )
         :
         (<LoadingButton
