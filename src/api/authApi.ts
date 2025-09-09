@@ -151,3 +151,13 @@ export const portfolioSummary = async () => {
     return { data: null, error: errorMsg };
   }
 }
+
+export const buyProduct = async (data: {productId: string, amount: number}) => {
+  try{
+    const response = await api.post("/user/investment", data);
+    return { data: response.data, error: null};
+  }catch (error: any){
+    let errorMsg = "Something went wrong!";
+    return { data: null, error: errorMsg };
+  }
+}

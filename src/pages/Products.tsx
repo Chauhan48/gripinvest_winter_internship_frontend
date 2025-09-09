@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Card, CardContent, Button, Autocomplete, TextField, Stack } from '@mui/material';
+import { Container, Typography, Box, Card, CardContent, Button, Autocomplete, TextField, Stack, Alert, Snackbar } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { productListing, suggestProducts } from '../api/authApi';
+import { buyProduct, productListing, suggestProducts } from '../api/authApi';
+import AmountPrompt from '../components/AmountPrompt';
 interface Product {
   id: string,
   name: string,
@@ -23,6 +24,13 @@ const Products: React.FC = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [suggestion, setSuggestion] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [investmentAmount, setInvestmentAmount] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [minInvestment, setMinInvestment] = useState<number>(0);
+  const [maxInvestment, setMaxInvestment] = useState<number>(0);
   const limit = 6
 
   useEffect(() => {
@@ -75,8 +83,62 @@ const Products: React.FC = () => {
     setPage(1);
   }
 
+  const handleInvestmentClick = async () => {
+    setPromptOpen(true);
+  }
+
+  const handlePromptSubmit = async (amount) => {
+  setInvestmentAmount(amount);
+
+  if (amount < minInvestment) {
+    setAlertMessage({ error: true, message: 'Amount should be greater than minimum investment' });
+    setOpenSnackbar(true);
+    return;
+  } 
+  if (amount > maxInvestment) {
+    setAlertMessage({ error: true, message: 'Amount should be less than maximum investment' });
+    setOpenSnackbar(true);
+    return;
+  }
+
+  const request = { productId: selectedProduct, amount: amount };
+  const { data, error } = await buyProduct(request);
+
+  if (error) {
+    setAlertMessage({ error: true, message: error });
+  } else {
+    setAlertMessage({ error: false, message: data.message });
+  }
+  setOpenSnackbar(true);
+};
+
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <Container maxWidth="lg">
+      <AmountPrompt
+        open={promptOpen}
+        onClose={() => setPromptOpen(false)}
+        onSubmit={handlePromptSubmit}
+      />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={alertMessage.error ? 'error' : 'success'}
+          sx={{ width: '100%' }}
+        >
+          {alertMessage.message} <br />
+        </Alert>
+      </Snackbar>
+
       {loading ?
         <Stack
           direction="row"
@@ -164,7 +226,14 @@ const Products: React.FC = () => {
                   </Typography>
                 </CardContent>
                 <Box sx={{ p: 2 }}>
-                  <Button variant="contained" fullWidth>
+                  <Button variant="contained" fullWidth
+                    onClick={() => {
+                      setSelectedProduct(product.id);
+                      setMinInvestment(product.min_investment);
+                      setMaxInvestment(product.max_investment);
+                      handleInvestmentClick();
+                    }}
+                  >
                     Invest Now
                   </Button>
                 </Box>
