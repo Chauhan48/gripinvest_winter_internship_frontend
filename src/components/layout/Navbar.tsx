@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
 const pages = ['Dashboard', 'Products', 'Investments'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Logout'];
 
 function Navbar() {
   const navigate = useNavigate();
@@ -58,6 +58,19 @@ function Navbar() {
   const handleLogoClick = () => {
     navigate('/dashboard');
   };
+
+  const handleSetting = (setting: string) => {
+    switch (setting) {
+      case 'Logout':
+        navigate('/login');
+        break;
+      case 'Profile':
+        navigate('/profile');
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <AppBar position="fixed">
@@ -174,7 +187,7 @@ function Navbar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  <Typography onClick={() => handleSetting(setting)} sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>
               ))}
             </Menu>

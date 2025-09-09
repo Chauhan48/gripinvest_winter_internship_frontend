@@ -8,6 +8,7 @@ import Products from './pages/Products';
 import Investments from './pages/Investments';
 import Login from './pages/Login';
 import ForgotPassword from './components/ForgotPassword';
+import Profile from './components/Profile';
 
 const theme = createTheme();
 
@@ -51,6 +52,16 @@ function App() {
             path="/forgot-password"
             element={
               <ForgotPassword />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Profile />
+                </Layout>
+              </ProtectedRoute>
             }
           />
         </Routes>
