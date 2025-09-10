@@ -3,6 +3,7 @@ import { Container, Typography, Box, Card, CardContent, Button, Autocomplete, Te
 import SaveIcon from '@mui/icons-material/Save';
 import { buyProduct, productListing, suggestProducts } from '../api/authApi';
 import AmountPrompt from '../components/AmountPrompt';
+import { useNavigate } from 'react-router-dom';
 interface Product {
   id: string,
   name: string,
@@ -33,9 +34,14 @@ const Products: React.FC = () => {
   const [maxInvestment, setMaxInvestment] = useState<number>(0);
   const limit = 6
 
+  const navigate = useNavigate()
+
   useEffect(() => {
     const fetchProduct = async () => {
-      const { products, total } = await productListing(page, limit, filters);
+      const { products, total, error } = await productListing(page, limit, filters);
+      if(error == "Unauthorized"){
+        navigate('/login');
+      }
       setTotalProducts(total);
       setProductList(products);
     }

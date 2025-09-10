@@ -110,6 +110,7 @@ export const productListing = async (
   } catch (error: any) {
     let errorMsg = 'Something went wrong!';
     if (error.response && error.response.data && error.response.data.message) {
+      
       errorMsg = error.response.data.message;
     }
     return { products: null, total: null, error: errorMsg };

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, Chip } from '@mui/material';
 import InvestmentCharts from '../components/InvestmentCharts';
+import { useNavigate } from 'react-router-dom';
 
 interface investments {
   id: string,
@@ -16,12 +17,14 @@ interface investments {
 
 const Investments: React.FC = () => {
 
+  const navigate = useNavigate();
+
     const [investments, setInvestments] = useState<investments[]>([]);
-  useEffect(() => {
-    if(investments){
-      console.log(investments);
-    }
-  }, [investments]);
+  // useEffect(() => {
+  //   if(investments){
+  //     console.log(investments);
+  //   }
+  // }, [investments]);
   const handleChildData = (data : investments[]) => {
     setInvestments(data);
   }
