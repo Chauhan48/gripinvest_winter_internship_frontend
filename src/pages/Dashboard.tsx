@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useNavigate } from 'react-router-dom';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -30,6 +31,7 @@ const Dashboard: React.FC = () => {
   const [fetchAiResponse, setFetchAiResponse] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<statusDistribution>({ active: '', matured: '', cancelled: '' });
+  const navigate = useNavigate();
 
   const data = {
     labels: ['Active', 'Matured', 'Cancelled'],
@@ -74,6 +76,7 @@ const Dashboard: React.FC = () => {
       try {
         const { data, error } = await portfolioSummary();
         if (error) {
+          navigate('/dashboard');
           setError(error);
           return;
         }
