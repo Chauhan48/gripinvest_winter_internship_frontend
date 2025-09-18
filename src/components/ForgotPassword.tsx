@@ -5,11 +5,10 @@ import {
   Box,
   TextField,
   Button,
-  Grid,
   Paper,
 } from "@mui/material";
 import Cookies from "js-cookie";
-import { forgotPassword, verifyOtp, changePassword } from "../api/authApi"; // import all needed APIs
+import { forgotPassword, verifyOtp, changePassword } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPassword: React.FC = () => {
@@ -209,23 +208,21 @@ const ForgotPassword: React.FC = () => {
               Enter the 6-digit OTP sent to <b>{email}</b>
             </Typography>
 
-            <Box mt={3}>
-              <Grid container spacing={2} justifyContent="center">
-                {otp.map((digit, index) => (
-                  <Grid item xs="auto" key={index}>
-                    <TextField
-                      id={`otp-${index}`}
-                      value={digit}
-                      onChange={(e) => handleChange(e.target.value, index)}
-                      inputProps={{
-                        maxLength: 1,
-                        style: { textAlign: "center", fontSize: "1.5rem" },
-                      }}
-                      sx={{ width: 56 }}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
+            <Box mt={3} display="flex" justifyContent="center" gap={2}>
+              {otp.map((digit, index) => (
+                <Box key={index}>
+                  <TextField
+                    id={`otp-${index}`}
+                    value={digit}
+                    onChange={(e) => handleChange(e.target.value, index)}
+                    inputProps={{
+                      maxLength: 1,
+                      style: { textAlign: "center", fontSize: "1.5rem" },
+                    }}
+                    sx={{ width: 56 }}
+                  />
+                </Box>
+              ))}
             </Box>
 
             <Box mt={3} textAlign="center">

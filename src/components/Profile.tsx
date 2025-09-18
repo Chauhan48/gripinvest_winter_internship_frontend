@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, MenuItem, Select, InputLabel, FormControl, Snackbar, Alert } from '@mui/material';
+import { useState } from 'react';
+import { Box, TextField, Button, Typography, MenuItem, InputLabel, FormControl, Snackbar, Alert } from '@mui/material';
+import Select from '@mui/material/Select';
+import type { SelectChangeEvent } from '@mui/material/Select';
 import { updateProfile } from '../api/authApi';
 
 const Profile = () => {
+    const handleSelectChange = (e: SelectChangeEvent) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name as string]: value,
+        }));
+    };
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [suggestion, setSuggestion] = useState<string[] | null>(null);
     const [warning, setWarning] = useState<string | null>(null);
@@ -15,9 +24,9 @@ const Profile = () => {
         risk_appetite: 'moderate',
     });
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+    setFormData((prev: typeof formData) => ({
             ...prev,
             [name]: value,
         }));
@@ -29,7 +38,7 @@ const Profile = () => {
         setOpenSnackbar(false);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const response = async () => {
             const { message, suggestions, warning, error } = await updateProfile(formData);
@@ -107,7 +116,7 @@ const Profile = () => {
                     name="risk_appetite"
                     value={formData.risk_appetite}
                     label="Risk Appetite"
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
                 >
                     <MenuItem value="low">low</MenuItem>
                     <MenuItem value="moderate">moderate</MenuItem>

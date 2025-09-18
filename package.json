@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "docker:build": "docker build -t grip-invest-frontend .",
+    "docker:run": "docker run --rm -p 5173:5173 grip-invest-frontend"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

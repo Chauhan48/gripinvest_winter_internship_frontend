@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 
-export default function AmountPrompt({ open, onClose, onSubmit }) {
+interface AmountPromptProps {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (amount: number) => void;
+}
+
+export default function AmountPrompt({ open, onClose, onSubmit }: AmountPromptProps) {
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (/^\d*\.?\d*$/.test(value)) {
       setAmount(value);

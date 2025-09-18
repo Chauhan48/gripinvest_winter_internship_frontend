@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, Chip } from '@mui/material';
 import InvestmentCharts from '../components/InvestmentCharts';
-import { useNavigate } from 'react-router-dom';
 
 interface investments {
   id: string,
@@ -17,7 +16,6 @@ interface investments {
 
 const Investments: React.FC = () => {
 
-  const navigate = useNavigate();
 
     const [investments, setInvestments] = useState<investments[]>([]);
   // useEffect(() => {
@@ -63,7 +61,7 @@ const Investments: React.FC = () => {
           </Card>
         ) : (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-            {investments.map((investment) => (
+            {investments.map((investment: any) => (
               <Card key={investment.id} sx={{ flex: '1 1 400px', minWidth: '400px' }}>
                 <CardContent>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>

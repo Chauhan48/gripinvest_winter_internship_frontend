@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Pie, Line } from "react-chartjs-2";
+import { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -22,17 +22,21 @@ ChartJS.register(
   PointElement
 );
 
-const InvestmentCharts = ({response}) => {
-  const [distributionData, setDistributionData] = useState(null);
+interface InvestmentChartsProps {
+  response: (investments: any) => void;
+}
+
+const InvestmentCharts = ({ response }: InvestmentChartsProps) => {
+  // const [distributionData, setDistributionData] = useState<any>(null);
   const [trendData, setTrendData] = useState(null);
 
   useEffect(() => {
     const fetchInvestments = async () => {
-        const {data, error} = await investments();
-        setTrendData(data.trendChart);
-        setDistributionData(data.distributionChart)
-        response(data.investments);
-    }
+      const { data } = await investments();
+      setTrendData(data.trendChart);
+      // setDistributionData(data.distributionChart);
+      response(data.investments);
+    };
     fetchInvestments();
   }, []);
 

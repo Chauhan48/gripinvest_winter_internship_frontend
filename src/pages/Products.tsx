@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Typography, Box, Card, CardContent, Button, Autocomplete, TextField, Stack, Alert, Snackbar } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { buyProduct, productListing, suggestProducts } from '../api/authApi';
@@ -26,10 +26,9 @@ const Products: React.FC = () => {
   const [suggestion, setSuggestion] = useState(false);
   const [loading, setLoading] = useState(false);
   const [promptOpen, setPromptOpen] = useState(false);
-  const [investmentAmount, setInvestmentAmount] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [alertMessage, setAlertMessage] = useState<{ error: boolean; message: string } | null>(null);
   const [minInvestment, setMinInvestment] = useState<number>(0);
   const [maxInvestment, setMaxInvestment] = useState<number>(0);
   const limit = 6
@@ -93,16 +92,15 @@ const Products: React.FC = () => {
     setPromptOpen(true);
   }
 
-  const handlePromptSubmit = async (amount) => {
-  setInvestmentAmount(amount);
+  const handlePromptSubmit = async (amount: number) => {
 
   if (amount < minInvestment) {
-    setAlertMessage({ error: true, message: 'Amount should be greater than minimum investment' });
+  setAlertMessage({ error: true, message: 'Amount should be greater than minimum investment' });
     setOpenSnackbar(true);
     return;
   } 
   if (amount > maxInvestment) {
-    setAlertMessage({ error: true, message: 'Amount should be less than maximum investment' });
+  setAlertMessage({ error: true, message: 'Amount should be less than maximum investment' });
     setOpenSnackbar(true);
     return;
   }
@@ -111,9 +109,9 @@ const Products: React.FC = () => {
   const { data, error } = await buyProduct(request);
 
   if (error) {
-    setAlertMessage({ error: true, message: error });
+  setAlertMessage({ error: true, message: error });
   } else {
-    setAlertMessage({ error: false, message: data.message });
+  setAlertMessage({ error: false, message: data.message });
   }
   setOpenSnackbar(true);
 };
@@ -138,10 +136,10 @@ const Products: React.FC = () => {
       >
         <Alert
           onClose={handleCloseSnackbar}
-          severity={alertMessage.error ? 'error' : 'success'}
+          severity={alertMessage && alertMessage.error ? 'error' : 'success'}
           sx={{ width: '100%' }}
         >
-          {alertMessage.message} <br />
+          {alertMessage && alertMessage.message} <br />
         </Alert>
       </Snackbar>
 
@@ -161,16 +159,14 @@ const Products: React.FC = () => {
             sx={{
               textTransform: "none",
               fontWeight: "bold",
-              fontSize: "1rem",
               px: 4,
               py: 1.5,
-              borderRadius: 2,
               minWidth: 180,
               color: "black",
               borderColor: "black",
-              "&:hover": {
-                borderColor: "black",
-                backgroundColor: "#6f6868ff",
+              '&:hover': {
+                borderColor: 'black',
+                backgroundColor: '#6f6868ff',
               },
             }}
           >
@@ -185,7 +181,7 @@ const Products: React.FC = () => {
           <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
             <Autocomplete
               value={selectedRisk}
-              onChange={(event, newValue) => setSelectedRisk(newValue)}
+              onChange={(_, newValue) => setSelectedRisk(newValue)}
               options={riskLevelOptions}
               getOptionLabel={(option) => option.label}
               sx={{ width: 200 }}
@@ -194,7 +190,7 @@ const Products: React.FC = () => {
             />
             <Autocomplete
               value={selectedInvestType}
-              onChange={(event, newValue) => setSelectedInvestType(newValue)}
+              onChange={(_, newValue) => setSelectedInvestType(newValue)}
               options={investmentTypeOptions}
               getOptionLabel={(option) => option.label}
               sx={{ width: 200 }}
