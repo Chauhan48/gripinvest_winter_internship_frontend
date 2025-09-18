@@ -1,69 +1,84 @@
-# React + TypeScript + Vite
+# Grip Invest Frontend (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend for the Grip Invest assignment, built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Prerequisites
+- Node.js 20.19+ or 22.12+ (Vite requirement)
+- npm 9+
+- Optional: Docker Desktop (for containerized build/run)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started (Local)
+1. Install dependencies:
+   ```bash
+   npm ci
+   ```
+2. Start the dev server (HMR on http://localhost:5173):
+   ```bash
+   npm run dev
+   ```
+3. Lint the code:
+   ```bash
+   npm run lint
+   ```
+4. Run tests:
+   ```bash
+   npm test
+   ```
+5. Build for production:
+   ```bash
+   npm run build
+   ```
+6. Preview the production build locally:
+   ```bash
+   npm run preview
+   ```
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Environment Variables
+If your APIs require environment variables, create a `.env` file in the project root and prefix variables with `VITE_`. For example:
+```bash
+VITE_API_BASE_URL=http://localhost:3000
 ```
+These will be available via `import.meta.env.VITE_API_BASE_URL`.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Scripts
+- `dev`: Start Vite dev server
+- `build`: Type-check and build production bundle
+- `preview`: Serve the built `dist/` locally
+- `lint`: Run ESLint
+- `test`: Run Jest tests
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Docker
+Containerize and run the app using the included `Dockerfile`.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Build Image
+```bash
+npm run docker:build
 ```
+This builds the app and prepares a minimal runtime that serves the compiled `dist/` on port 5173.
+
+### Run Container
+```bash
+npm run docker:run
+```
+The app will be available at `http://localhost:5173`.
+
+### Notes
+- Some networks may block Docker Hub; ensure Docker Desktop is logged in. If pulls fail, try again later or switch base images.
+- The container exposes port 5173. Adjust the port mapping in `package.json` if needed.
+
+## Tech Stack
+- React 19, TypeScript, Vite 7
+- MUI (Material UI)
+- Axios, React Router
+- Jest + Testing Library for tests
+
+## Folder Structure
+- `src/` application source
+- `src/pages/` route-level pages
+- `src/components/` shared components
+- `src/api/` API clients
+- `dist/` build output (generated)
+
+## Troubleshooting
+- Node version warning: If you see a Vite Node version warning, upgrade Node to 20.19+ or 22.12+.
+- TypeScript errors on build: run `npm run build` and address the reported files.
